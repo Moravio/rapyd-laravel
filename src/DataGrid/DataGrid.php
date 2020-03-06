@@ -32,6 +32,9 @@ class DataGrid extends DataSet
      */
     protected $rowsAfter = [];
 
+    /** @var Closure|null */
+    protected $mapRowCallback = null;
+
     /**
      * @param string $name
      * @param string $label
@@ -66,6 +69,7 @@ class DataGrid extends DataSet
 
         foreach ($this->data as $tablerow) {
 
+            $tablerow = $this->mapRow($tablerow);
             $row = new Row($tablerow);
 
             foreach ($this->columns as $column) {
@@ -172,6 +176,7 @@ class DataGrid extends DataSet
         fputs($handle, $delimiter['enclosure'].implode($delimiter['enclosure'].$delimiter['delimiter'].$delimiter['enclosure'], $this->headers) .$delimiter['enclosure'].$delimiter['line_ending']);
 
         foreach ($this->data as $tablerow) {
+            $tablerow = $this->mapRow($tablerow);
             $row = new Row($tablerow);
 
             foreach ($this->columns as $column) {
@@ -427,5 +432,30 @@ class DataGrid extends DataSet
         $this->rowsAfter[$name] = $this->createRow($data);
 
         return $this->rowsAfter[$name];
+    }
+
+    /**
+     * Save function to use to map row`s value
+     *
+     * @param Closure|null $callback
+     */
+    public function setMapRowCallback(?Closure $callback)
+    {
+        $this->mapRowCallback = $callback;
+    }
+
+    /**
+     * Map`s row to another object using mapRowCallback
+     *
+     * @param $data
+     * @return mixed
+     */
+    protected function mapRow($data)
+    {
+        if ($this->mapRowCallback !== null) {
+            $fn = $this->mapRowCallback;
+            return $fn($data);
+        }
+        return $data;
     }
 }
