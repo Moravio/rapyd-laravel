@@ -44,13 +44,13 @@ class Map extends Field
 
     public function getValue()
     {
-        $process = (\Input::get('search') || \Input::get('save')) ? true : false;
-        
-        if ($this->request_refill == true && $process && \Input::exists($this->lat) ) {
-            $this->value['lat'] = \Input::get($this->lat);
-            $this->value['lon'] = \Input::get($this->lon);
+        $process = (\Request::input('search') || \Request::input('save')) ? true : false;
+
+        if ($this->request_refill == true && $process && \Request::exists($this->lat) ) {
+            $this->value['lat'] = \Request::input($this->lat);
+            $this->value['lon'] = \Request::input($this->lon);
             $this->is_refill = true;
-            
+
         } elseif (($this->status == "create") && ($this->insert_value != null)) {
             $this->value = $this->insert_value;
         } elseif (($this->status == "modify") && ($this->update_value != null)) {
@@ -64,10 +64,10 @@ class Map extends Field
 
     public function getNewValue()
     {
-        $process = (\Input::get('search') || \Input::get('save')) ? true : false;
-        if ($process && \Input::exists($this->lat)) {
-            $this->new_value['lat'] = \Input::get($this->lat);
-            $this->new_value['lon'] = \Input::get($this->lon);
+        $process = (\Request::input('search') || \Request::input('save')) ? true : false;
+        if ($process && \Request::exists($this->lat)) {
+            $this->new_value['lat'] = \Request::input($this->lat);
+            $this->new_value['lon'] = \Request::input($this->lon);
 
         } elseif (($this->action == "insert") && ($this->insert_value != null)) {
             $this->edited = true;
@@ -77,7 +77,7 @@ class Map extends Field
             $this->new_value = $this->update_value;
         }
     }
-    
+
     public function autoUpdate($save = false)
     {
         if (isset($this->model))
@@ -92,7 +92,7 @@ class Map extends Field
         }
         return true;
     }
-    
+
     public function build()
     {
         $output = "";
@@ -110,7 +110,7 @@ class Map extends Field
                     $output = $this->layout['null_label'];
                 } else {
                     $output = "<img border=\"0\" src=\"//maps.googleapis.com/maps/api/staticmap?center={$this->value['lat']},{$this->value['lon']}&zoom={$this->zoom}&size=500x500\">";
-                   
+
                 }
                 $output = "<div class='help-block'>" . $output . "</div>";
                 break;
@@ -121,17 +121,17 @@ class Map extends Field
                 $output .= Form::hidden($this->lon, $this->value['lon'], ['id'=>$this->lon]);
                 $output .= '<div id="map_'.$this->name.'" style="width:500px; height:500px"></div>';
                 $output .= '<script src="' . $this->getUrl() . '"></script>';
-                
+
             \Rapyd::script("
-        
+
             function initialize()
             {
                 var latitude = document.getElementById('{$this->lat}');
                 var longitude = document.getElementById('{$this->lon}');
                 var zoom = {$this->zoom};
-        
+
                 var LatLng = new google.maps.LatLng(latitude.value, longitude.value);
-        
+
                 var mapOptions = {
                     zoom: zoom,
                     center: LatLng,
@@ -140,7 +140,7 @@ class Map extends Field
                     scaleControl: true,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 }
-        
+
                 var map = new google.maps.Map(document.getElementById('map_{$this->name}'),mapOptions);
                 var marker = new google.maps.Marker({
                     position: LatLng,
@@ -161,7 +161,7 @@ class Map extends Field
             }
             initialize();
         ");
-                
+
                 break;
 
             case "hidden":

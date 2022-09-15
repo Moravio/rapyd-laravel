@@ -3,8 +3,6 @@
 namespace Zofe\Rapyd\DataEdit;
 
 use Zofe\Rapyd\DataForm\DataForm;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Config;
 use Zofe\Rapyd\Persistence;

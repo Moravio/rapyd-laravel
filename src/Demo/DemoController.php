@@ -2,7 +2,6 @@
 
 
 use Illuminate\Routing\Controller;
-use Illuminate\Http\Request;
 
 
 class DemoController extends Controller
@@ -311,7 +310,7 @@ class DemoController extends Controller
 
     public function anyEdit()
     {
-        if (\Input::get('do_delete')==1) return  "not the first";
+        if (\Request::input('do_delete')==1) return  "not the first";
 
         $edit = \DataEdit::source(new Article());
         $edit->label('Edit Article');
@@ -355,7 +354,7 @@ class DemoController extends Controller
 
     public function anyMenuedit()
     {
-        if (\Input::get('do_delete') == 1) return "not the first";
+        if (\Request::input('do_delete') == 1) return "not the first";
 
         $edit = \DataEdit::source(new Menu());
         $edit->link("rapyd-demo/datatree","Menu", "TR")->back();
@@ -374,10 +373,10 @@ class DemoController extends Controller
         $grid->paginate(10);
         return $grid;
     }
-    
+
     public function anyNudeedit()
     {
-        if (\Input::get('do_delete')==1) return  "not the first";
+        if (\Request::input('do_delete')==1) return  "not the first";
 
         $edit = \DataEdit::source(new Article());
         $edit->link("rapyd-demo/nudegrid","Articles", "TR");
@@ -386,8 +385,8 @@ class DemoController extends Controller
         $edit->add('public','Public','checkbox');
         return $edit->view();
     }
-    
-    
+
+
     public function getEmbed()
     {
         //embed some widgets and isolate the dom using riot & pjax
@@ -395,22 +394,22 @@ class DemoController extends Controller
 
         //if you prefer you can simply use an html tag
         $embed2 = '<dataembed id="embed2" remote="/rapyd-demo/nudeedit?modify=1"></dataembed>';
-        
+
         return view('rapyd::demo.embed', compact('embed1','embed2'));
     }
 
     public function getAuthorlist()
     {
         //needed only if you want a custom remote ajax call for a custom search
-        return Author::where("firstname","like", \Input::get("q")."%")
-            ->orWhere("lastname","like", \Input::get("q")."%")->take(10)->get();
+        return Author::where("firstname","like", \Request::input("q")."%")
+            ->orWhere("lastname","like", \Request::input("q")."%")->take(10)->get();
 
     }
 
     public function getCategorylist()
     {
         //needed only if you want a custom remote ajax call for a custom search
-        return Category::where("name","like", \Input::get("q")."%")->take(10)->get();
+        return Category::where("name","like", \Request::input("q")."%")->take(10)->get();
 
     }
 

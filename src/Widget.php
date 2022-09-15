@@ -4,7 +4,6 @@ use Collective\Html\FormFacade as Form;
 use Collective\Html\HtmlFacade as HTML;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Session;
 
 class Widget
 {

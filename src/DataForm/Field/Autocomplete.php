@@ -3,9 +3,8 @@
 namespace Zofe\Rapyd\DataForm\Field;
 
 use Collective\Html\FormFacade as Form;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
-use MyProject\Proxies\__CG__\stdClass;
 use Zofe\Rapyd\Rapyd;
 
 class Autocomplete extends Field
@@ -52,7 +51,7 @@ class Autocomplete extends Field
         $this->change = $callback;
         return $this;
     }
-    
+
     public function minChars($len)
     {
         $this->min_chars = $len;
@@ -150,8 +149,8 @@ class Autocomplete extends Field
             case "create":
             case "modify":
 
-                if (Input::get("auto_".$this->name)) {
-                    $autocomplete = Input::get("auto_".$this->name);
+                if (Request::input("auto_".$this->name)) {
+                    $autocomplete = Request::input("auto_".$this->name);
                 } elseif ($this->relation != null) {
                     $name = $this->rel_field;
                     $autocomplete = @$this->relation->get()->first()->$name;
@@ -202,7 +201,7 @@ class Autocomplete extends Field
                         function (e,data) {
                             $('#{$this->name}').val(data.{$this->record_id});
                             {$this->change}
-                            
+
                     }).on("typeahead:closed,typeahead:change",
                         function (e,data) {
                             if ('{$this->must_match}') {
@@ -225,8 +224,8 @@ class Autocomplete extends Field
                             e.preventDefault();
                         }
                     });
-                    
-                    
+
+
 acp;
 
                     Rapyd::script($script);

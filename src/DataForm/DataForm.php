@@ -2,7 +2,6 @@
 
 namespace Zofe\Rapyd\DataForm;
 
-use Illuminate\Database\Eloquent\Model;
 use Zofe\Rapyd\DataForm\Field\Auto;
 use Zofe\Rapyd\DataForm\Field\Autocomplete;
 use Zofe\Rapyd\DataForm\Field\Colorpicker;
@@ -23,7 +22,6 @@ use Zofe\Rapyd\Widget;
 use Collective\Html\FormFacade as Form;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Zofe\Rapyd\Rapyd;
@@ -72,7 +70,7 @@ class DataForm extends Widget
     public $model_relations;
     public $validator;
     public $validator_messages = array();
-    
+
     public $output = "";
     public $custom_output = null;
     public $fields = array();
@@ -274,9 +272,9 @@ class DataForm extends Widget
      */
     public function errors($messages = [])
     {
-        $this->validator_messages = $messages; 
+        $this->validator_messages = $messages;
     }
-    
+
     /**
      * @return bool
      */
@@ -297,7 +295,7 @@ class DataForm extends Widget
         }
         if (isset($rules)) {
 
-            $this->validator = Validator::make(Input::all(), $rules, $this->validator_messages, $attributes);
+            $this->validator = Validator::make(Request::all(), $rules, $this->validator_messages, $attributes);
 
             return !$this->validator->fails();
         } else {
@@ -510,7 +508,7 @@ class DataForm extends Widget
             } elseif ($result && is_a($result, 'Illuminate\View\View')) {
                 $this->custom_output = $result;
             }
-            
+
             //reprocess if an error is added in closure
             if ($this->process_status == 'error') {
                 $this->process();
@@ -579,7 +577,7 @@ class DataForm extends Widget
     {
         return ($this->custom_output != null) ? true : false;
     }
-    
+
     /**
      * @return string
      */
@@ -660,7 +658,7 @@ class DataForm extends Widget
         $this->has_placeholders = true;
         return $this;
     }
-    
+
     /**
      * Magic method to catch all appends
      *
