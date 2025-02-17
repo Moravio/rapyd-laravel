@@ -1,4 +1,6 @@
-<?php namespace Zofe\Rapyd\DataForm\Field;
+<?php
+
+namespace Zofe\Rapyd\DataForm\Field;
 
 use Collective\Html\FormFacade as Form;
 
@@ -23,7 +25,7 @@ class Multiselect extends Field
         if (is_array($this->value)) {
             $this->values = $this->value;
         } else {
-            $this->values = explode($this->serialization_sep, $this->value);
+            $this->values = explode($this->serialization_sep, $this->value ?? '');
         }
 
         $description_arr = array();

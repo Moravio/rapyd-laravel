@@ -1,4 +1,6 @@
-<?php namespace Zofe\Rapyd;
+<?php
+
+namespace Zofe\Rapyd;
 
 use Illuminate\Support\Facades\Request;
 
@@ -6,11 +8,17 @@ class Url
 {
     public $url;
 
-    protected $semantic = array( 'page'    , 'orderby',
-                                 'show'   , 'modify' ,
-                                 'create' , 'insert' ,
-                                 'update' , 'delete' ,
-                                 'process');
+    protected $semantic = array(
+        'page',
+        'orderby',
+        'show',
+        'modify',
+        'create',
+        'insert',
+        'update',
+        'delete',
+        'process'
+    );
 
     public static function unparse_str($array)
     {
@@ -31,7 +39,7 @@ class Url
         if ($this->url == '') {
             return $this->current();
         } else {
-            $url       = $this->url ;
+            $url       = $this->url;
             $this->url = '';
 
             return $url;
@@ -64,8 +72,8 @@ class Url
         $qs_array = array();
 
         if (strpos($url, '?') !== false) {
-            $qs  = substr( $url, strpos($url, '?') + 1 );
-            $url = substr( $url, 0, strpos($url, '?' )) ;
+            $qs  = substr($url, strpos($url, '?') + 1);
+            $url = substr($url, 0, strpos($url, '?'));
 
             parse_str($qs, $qs_array);
         }
@@ -88,8 +96,8 @@ class Url
             return $this;
         }
 
-        $qs  = substr( $url, strpos($url, '?') + 1 );
-        $url = substr( $url, 0, strpos($url, '?') ) ;
+        $qs  = substr($url, strpos($url, '?') + 1);
+        $url = substr($url, 0, strpos($url, '?'));
 
         parse_str($qs, $qs_array);
 
@@ -133,7 +141,7 @@ class Url
 
         if (strpos($url, '?') !== false) {
             $qs  = substr($url, strpos($url, '?') + 1);
-            $url = substr($url, 0, strpos($url, '?')) ;
+            $url = substr($url, 0, strpos($url, '?'));
 
             parse_str($qs, $qs_array);
         }
@@ -151,19 +159,21 @@ class Url
 
     public function value($key, $default = false)
     {
-        if ( strpos($key, '|') ) {
+        if (strpos($key, '|')) {
             $keys = explode('|', $key);
             foreach ($keys as $k) {
                 $v = $this->value($k, $default);
                 if ($v != $default) {
                     return $v;
                 }
-            }//foreach
+            } //foreach
 
             return $default;
-        }//if
+        } //if
 
-        parse_str(parse_url($this->current(), PHP_URL_QUERY), $params);
+        $query = parse_url($this->current(), PHP_URL_QUERY) ?? '';
+        parse_str($query, $params);
+
         if (strpos($key, '.')) {
             list($namespace, $subkey) = explode('.', $key);
 
@@ -172,5 +182,4 @@ class Url
             return (isset($params[$key])) ? $params[$key] : $default;
         }
     }
-
 }
